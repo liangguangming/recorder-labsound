@@ -29,7 +29,6 @@ int main() {
             spdlog::info("  Nominal sample rate: {}", device.nominal_samplerate);
         }
 
-
         AudioDeviceInfo inputDeviceInfo,outputDeviceInfo;
         for (const auto& device : devices) {
             if (device.is_default_input) {
@@ -95,26 +94,39 @@ int main() {
 
         // 创建音频节点
         spdlog::info("Creating audio nodes...");
-        auto oscillator = std::make_shared<OscillatorNode>(*ctx);
-        if (!oscillator) {
-            spdlog::error("Failed to create oscillator node");
-            return 1;
-        }
-
+        
+        // 创建两个振荡器，产生不同频率的声音
+        auto oscillator1 = std::make_shared<OscillatorNode>(*ctx);
+        auto oscillator2 = std::make_shared<OscillatorNode>(*ctx);
+        
+        // 创建增益节点（用作混合器）
         auto gainNode = std::make_shared<GainNode>(*ctx);
-        if (!gainNode) {
-            spdlog::error("Failed to create gain node");
+
+        if (!oscillator1 || !oscillator2 || !gainNode) {
+            spdlog::error("Failed to create audio nodes");
             return 1;
         }
 
         spdlog::info("Setting up audio nodes...");
-        oscillator->setType(OscillatorType::SINE);
-        oscillator->frequency()->setValue(440.0f);
+        // 设置振荡器1：440Hz 正弦波
+        oscillator1->setType(OscillatorType::SINE);
+        oscillator1->frequency()->setValue(440.0f);
+        
+        // 设置振荡器2：880Hz 正弦波
+        oscillator2->setType(OscillatorType::SINE);
+        oscillator2->frequency()->setValue(880.0f);
+        
+        // 设置增益
         gainNode->gain()->setValue(0.2f);
 
         // 使用 AudioContext 的 connect 方法连接节点
         spdlog::info("Connecting audio nodes...");
-        ctx->connect(gainNode, oscillator);
+        
+        // 将两个振荡器连接到增益节点
+        ctx->connect(gainNode, oscillator1);
+        ctx->connect(gainNode, oscillator2);
+        
+        // 将增益节点连接到设备节点
         ctx->connect(deviceNode, gainNode);
 
         // 等待连接完成
@@ -122,17 +134,19 @@ int main() {
         ctx->synchronizeConnections();
 
         // 立即开始播放
-        spdlog::info("Starting oscillator...");
-        oscillator->start(0.0f);
-        spdlog::info("Sine wave started.");
+        spdlog::info("Starting oscillators...");
+        oscillator1->start(0.0f);
+        oscillator2->start(0.0f);
+        spdlog::info("Sine waves started.");
 
         std::this_thread::sleep_for(std::chrono::seconds(5));
         spdlog::info("Waiting for 5 seconds...");
 
         // 立即停止播放
-        spdlog::info("Stopping oscillator...");
-        oscillator->stop(0.0f);
-        spdlog::info("Sine wave stopped.");
+        spdlog::info("Stopping oscillators...");
+        oscillator1->stop(0.0f);
+        oscillator2->stop(0.0f);
+        spdlog::info("Sine waves stopped.");
 
         // 停止音频流
         spdlog::info("Stopping audio stream...");
