@@ -21,6 +21,7 @@ int main() {
             spdlog::info("  Nominal sample rate: {}", device.nominal_samplerate);
         }
 
+
         AudioDeviceInfo inputDeviceInfo,outputDeviceInfo;
         for (const auto& device : devices) {
             if (device.is_default_input) {
