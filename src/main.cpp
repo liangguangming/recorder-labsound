@@ -21,6 +21,16 @@ int main() {
             spdlog::info("  Nominal sample rate: {}", device.nominal_samplerate);
         }
 
+        AudioDeviceInfo inputDeviceInfo,outputDeviceInfo;
+        for (const auto& device : devices) {
+            if (device.is_default_input) {
+                inputDeviceInfo = device;
+            }
+            if (device.is_default_output) {
+                outputDeviceInfo = device;
+            }
+        }
+
         // 获取默认输出设备
         auto defaultOutputDevice = AudioDevice::GetDefaultOutputAudioDeviceIndex();
         if (!defaultOutputDevice.valid) {
@@ -39,13 +49,13 @@ int main() {
         // 配置音频流
         AudioStreamConfig outputConfig;
         outputConfig.device_index = defaultOutputDevice.index;  // 使用默认输出设备
-        outputConfig.desired_channels = 2;  // 立体声
-        outputConfig.desired_samplerate = 44100;  // 标准采样率
+        outputConfig.desired_channels = outputDeviceInfo.num_output_channels;  // 立体声
+        outputConfig.desired_samplerate = outputDeviceInfo.nominal_samplerate;  // 标准采样率
 
         AudioStreamConfig inputConfig;
-        inputConfig.device_index = 0;  // 使用默认输入设备
-        inputConfig.desired_channels = 0;  // 不需要输入
-        inputConfig.desired_samplerate = 44100;  // 标准采样率
+        inputConfig.device_index = inputDeviceInfo.index;  // 使用默认输入设备
+        inputConfig.desired_channels = 0; // 禁用 input
+        inputConfig.desired_samplerate = inputDeviceInfo.nominal_samplerate;  // 标准采样率
 
         // 创建并设置硬件设备节点
         spdlog::info("Creating hardware device node...");

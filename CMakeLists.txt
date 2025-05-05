@@ -20,9 +20,10 @@ if(NOT EXISTS "${CMAKE_SOURCE_DIR}/third_party/spdlog")
     message(FATAL_ERROR "spdlog directory not found at ${CMAKE_SOURCE_DIR}/third_party/spdlog")
 endif()
 
-# 添加编译选项来禁用 labsound 的日志
+# 添加编译选项来禁用 labsound 的日志和调试输出
 add_definitions(-DLABSOUND_DISABLE_LOGGING)
 add_definitions(-DLABSOUND_LOG_LEVEL=5)  # 设置日志级别为最高级别（FATAL）
+add_definitions(-DNDEBUG)  # 禁用调试输出
 
 # 添加 spdlog 作为本地子项目
 add_subdirectory(third_party/spdlog)

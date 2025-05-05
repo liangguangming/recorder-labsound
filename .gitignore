@@ -1,4 +1,5 @@
 build
+cmake-build-debug
 .idea
 .vscode
 third_party/labsound/build
