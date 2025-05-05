@@ -3,8 +3,16 @@
 #include <chrono>
 #include <thread>
 
+// 添加 ffmpeg 头文件
+extern "C" {
+#include <libavutil/avutil.h>
+}
+
 int main() {
     spdlog::info("Starting LabSound example...");
+
+    // 测试 ffmpeg
+    spdlog::info("FFmpeg version: {}", av_version_info());
 
     using namespace lab;
     
