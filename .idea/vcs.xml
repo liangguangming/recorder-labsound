@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/build/_deps/labsound-src" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/build/_deps/labsound-src/third_party/libnyquist" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/build/_deps/labsound-src/third_party/libsamplerate" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/build/_deps/labsound-src/third_party/miniaudio" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/build/_deps/spdlog-src" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/labsound" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/labsound/third_party/libnyquist" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/labsound/third_party/libsamplerate" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/labsound/third_party/miniaudio" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/third_party/spdlog" vcs="Git" />
   </component>
 </project>

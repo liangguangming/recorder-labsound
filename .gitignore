@@ -1,1 +1,5 @@
 build
+.idea
+.vscode
+third_party/labsound/build
+third_party/spdlog/build

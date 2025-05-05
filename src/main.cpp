@@ -1,10 +1,4 @@
-#include <LabSound/core/AudioContext.h>
-#include <LabSound/core/AudioNode.h>
-#include <LabSound/core/AudioParam.h>
-#include <LabSound/core/OscillatorNode.h>
-#include <LabSound/core/GainNode.h>
-#include <LabSound/core/AudioHardwareDeviceNode.h>
-#include <LabSound/core/AudioDevice.h>
+#include <LabSound/LabSound.h>
 #include <spdlog/spdlog.h>
 #include <chrono>
 #include <thread>

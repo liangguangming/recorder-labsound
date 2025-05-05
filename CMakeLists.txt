@@ -5,32 +5,30 @@ project(MyLabSoundProject)
 message(STATUS "CMake version: ${CMAKE_VERSION}")
 message(STATUS "Generator: ${CMAKE_GENERATOR}")
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+message(STATUS "Source directory: ${CMAKE_SOURCE_DIR}")
+message(STATUS "Binary directory: ${CMAKE_BINARY_DIR}")
+message(STATUS "CXX compiler: ${CMAKE_CXX_COMPILER}")
+message(STATUS "CXX flags: ${CMAKE_CXX_FLAGS}")
+
+# 检查 labsound 目录是否存在
+if(NOT EXISTS "${CMAKE_SOURCE_DIR}/third_party/labsound")
+    message(FATAL_ERROR "labsound directory not found at ${CMAKE_SOURCE_DIR}/third_party/labsound")
+endif()
+
+# 检查 spdlog 目录是否存在
+if(NOT EXISTS "${CMAKE_SOURCE_DIR}/third_party/spdlog")
+    message(FATAL_ERROR "spdlog directory not found at ${CMAKE_SOURCE_DIR}/third_party/spdlog")
+endif()
 
 # 添加编译选项来禁用 labsound 的日志
 add_definitions(-DLABSOUND_DISABLE_LOGGING)
+add_definitions(-DLABSOUND_LOG_LEVEL=5)  # 设置日志级别为最高级别（FATAL）
 
 # 添加 spdlog 作为本地子项目
 add_subdirectory(third_party/spdlog)
 
-# 添加 spdlog 作为子项目（注释掉，保留以便后续回退）
-# include(FetchContent)
-# FetchContent_Declare(
-#     spdlog
-#     GIT_REPOSITORY https://github.com/gabime/spdlog.git
-#     GIT_TAG v1.14.1
-# )
-# FetchContent_MakeAvailable(spdlog)
-
 # 添加 labsound 作为本地子项目
 add_subdirectory(third_party/labsound)
-
-# 添加 labsound 作为子项目（注释掉，保留以便后续回退）
-# FetchContent_Declare(
-#     labsound
-#     GIT_REPOSITORY https://github.com/LabSound/LabSound.git
-#     GIT_TAG v1.2.0
-# )
-# FetchContent_MakeAvailable(labsound)
 
 add_executable(MyLabSoundApp src/main.cpp)
 
@@ -45,9 +43,6 @@ target_link_libraries(MyLabSoundApp PRIVATE
 target_include_directories(MyLabSoundApp PRIVATE 
     ${CMAKE_SOURCE_DIR}/third_party/labsound/include
     ${CMAKE_SOURCE_DIR}/third_party/labsound/src
-    # ${labsound_SOURCE_DIR}/include
-    # ${labsound_BINARY_DIR}/include
-    # ${labsound_SOURCE_DIR}/src
 )
 
 # 设置编译器标志
@@ -62,3 +57,16 @@ if(APPLE)
         "-framework Accelerate"
     )
 endif()
+
+# 打印最终配置信息
+message(STATUS "Final include directories for MyLabSoundApp:")
+get_target_property(INCLUDES MyLabSoundApp INCLUDE_DIRECTORIES)
+foreach(INCLUDE ${INCLUDES})
+    message(STATUS "  ${INCLUDE}")
+endforeach()
+
+message(STATUS "Final link libraries for MyLabSoundApp:")
+get_target_property(LIBS MyLabSoundApp LINK_LIBRARIES)
+foreach(LIB ${LIBS})
+    message(STATUS "  ${LIB}")
+endforeach()
