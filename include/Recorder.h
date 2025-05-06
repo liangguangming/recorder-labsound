@@ -9,6 +9,12 @@
 
 class Recorder {
 public:
+    enum class State {
+        Stopped,
+        Recording,
+        Paused
+    };
+
     Recorder();
     ~Recorder();
 
@@ -28,31 +34,26 @@ public:
     void stop();
 
     // 录制状态
-    enum class State {
-        Stopped,
-        Recording,
-        Paused
-    };
     State state() const;
 
 private:
-    std::string outputPath_;
-    std::vector<float> pcmBuffer_; // 录制的 PCM 数据
-    std::atomic<State> state_;
-    std::mutex bufferMutex_;
-
-    // LabSound 相关
-    std::unique_ptr<lab::AudioContext> ctx_;
-    std::shared_ptr<lab::AudioHardwareInputNode> micNode_;
-    std::shared_ptr<lab::FunctionNode> sysNode_;
-    std::shared_ptr<lab::GainNode> gainNode_;
-    std::shared_ptr<lab::FunctionNode> recordNode_;
-
-    // 内部方法：写入文件
+    bool initializeNodes();
     void writeToFile();
 
-    // 内部方法：初始化音频节点
-    bool initializeNodes();
+    State state_;
+    std::string outputPath_;
+    std::vector<float> pcmBuffer_; // 录制的 PCM 数据
+    std::mutex bufferMutex_;
+    
+    // 音频参数
+    int sampleRate_;
+    int channels_;
+    
+    // LabSound 相关
+    std::shared_ptr<lab::AudioContext> ctx_;
+    std::shared_ptr<lab::AudioHardwareInputNode> micNode_;
+    std::shared_ptr<lab::GainNode> gainNode_;
+    std::shared_ptr<lab::FunctionNode> functionNode_;
 
     // 禁止拷贝
     Recorder(const Recorder&) = delete;
