@@ -54,6 +54,8 @@ int main() {
             return 1;
         }
 
+        std::unique_ptr<FunctionNode> fNode = std::make_unique<FunctionNode>(*ctx, 1);
+
         // 配置音频流
         AudioStreamConfig outputConfig;
         outputConfig.device_index = defaultOutputDevice.index;  // 使用默认输出设备
