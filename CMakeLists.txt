@@ -54,7 +54,13 @@ if(NOT AVCODEC_LIB OR NOT AVFORMAT_LIB OR NOT AVUTIL_LIB OR NOT SWRESAMPLE_LIB)
     message(FATAL_ERROR "Failed to find ffmpeg libraries")
 endif()
 
-add_executable(MyLabSoundApp src/main.cpp)
+# 添加源文件
+file(GLOB SOURCES
+    "src/*.cpp"
+    "src/**/*.cpp"
+)
+
+add_executable(MyLabSoundApp ${SOURCES})
 
 # 链接 labsound 库和 spdlog
 target_link_libraries(MyLabSoundApp PRIVATE 
@@ -65,6 +71,8 @@ target_link_libraries(MyLabSoundApp PRIVATE
 
 # 设置包含目录
 target_include_directories(MyLabSoundApp PRIVATE 
+    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/third_party/labsound/include
     ${CMAKE_SOURCE_DIR}/third_party/labsound/src
     ${FFMPEG_INCLUDE_DIR}
