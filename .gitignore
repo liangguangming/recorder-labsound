@@ -1,5 +1,6 @@
 build
 cmake-build-debug
 .vscode
+.idea
 third_party/labsound/build
 third_party/spdlog/build
